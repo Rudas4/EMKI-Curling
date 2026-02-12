@@ -1,956 +1,1997 @@
 <!DOCTYPE html>
+
 <html lang="hu">
+
 <head>
+
 <!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-4QCS6VRXDB"></script>
+
+<script async src=https://www.googletagmanager.com/gtag/js?id=G-4QCS6VRXDB></script>
+
 <script>
+
   window.dataLayer = window.dataLayer || [];
+
   function gtag(){dataLayer.push(arguments);}
+
   gtag('js', new Date());
+
   gtag('config', 'G-4QCS6VRXDB');
+
 </script>
 
+ 
+
   <meta charset="UTF-8">
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+
   <title>Curling mini-game</title>
 
+ 
+
   <style>
+
     /* START PAGE STYLES */
+
     #startPage {
+
       position: fixed;
+
       top: 0; left: 0;
+
       width: 100%; height: 100%;
+
       background-image: url('háttér1.jpg');
+
       background-size: cover;
+
       background-position: center;
+
       display: flex;
+
       flex-direction: column;
+
       align-items: center;
+
       justify-content: center;
+
       z-index: 1000;
+
       overflow: hidden;
+
     }
 
     #startPage::before {
+
       content: '';
+
       position: absolute;
-      top: 0; left: 0; right: 0; bottom: 0;
+
+      inset: 0;
+
       background-color: rgba(0, 0, 0, 0.3);
+
       z-index: -1;
+
     }
 
     #startPage h1 {
+
       font-size: 4em;
+
       color: #ffcc00;
+
       text-shadow: 3px 3px 5px rgba(0, 0, 0, 0.7);
+
       margin-bottom: 30px;
+
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+
       text-align: center;
+
       padding: 0 20px;
+
     }
 
     #startButton {
+
       background-color: #4CAF50;
+
       color: white;
+
       border: none;
+
       padding: 20px 50px;
+
       font-size: 1.8em;
+
       cursor: pointer;
+
       border-radius: 10px;
+
       transition: all 0.3s;
+
       box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+
       font-weight: bold;
+
       z-index: 2;
+
     }
 
-    #startButton:hover {
-      background-color: #3e8e41;
-      transform: scale(1.05);
-    }
+    #startButton:hover { background-color: #3e8e41; transform: scale(1.05); }
+
+ 
 
     /* END PAGE STYLES */
+
     #endPage {
+
       position: fixed;
+
       top: 0; left: 0;
+
       width: 100%; height: 100%;
+
       background-image: url('háttér2.jpg');
+
       background-size: cover;
+
       background-position: center;
+
       display: none;
+
       flex-direction: column;
+
       align-items: center;
+
       justify-content: center;
+
       z-index: 1000;
+
       overflow: hidden;
+
     }
 
     #endPage::before {
+
       content: '';
+
       position: absolute;
-      top: 0; left: 0; right: 0; bottom: 0;
+
+      inset: 0;
+
       background-color: rgba(0, 0, 0, 0.4);
+
       z-index: -1;
+
     }
 
     #endPage h2 {
+
       font-size: 3.5em;
+
       color: #ffcc00;
+
       text-shadow: 3px 3px 5px rgba(0, 0, 0, 0.7);
+
       margin-bottom: 20px;
+
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+
       text-align: center;
+
       padding: 0 20px;
+
     }
 
     #finalScore {
+
       font-size: 5em;
+
       color: white;
+
       font-weight: bold;
+
       text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+
       margin: 10px 0;
+
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+
     }
 
     #finalTime {
+
       font-size: 2em;
+
       color: #FFD700;
+
       font-weight: bold;
+
       text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+
       margin: 10px 0 30px 0;
+
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+
     }
 
     #restartButton {
+
       background-color: #4CAF50;
+
       color: white;
+
       border: none;
+
       padding: 20px 50px;
+
       font-size: 1.8em;
+
       cursor: pointer;
+
       border-radius: 10px;
+
       transition: all 0.3s;
+
       box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+
       font-weight: bold;
+
       margin-top: 20px;
+
       z-index: 2;
+
     }
 
-    #restartButton:hover {
-      background-color: #3e8e41;
-      transform: scale(1.05);
+    #restartButton:hover { background-color: #3e8e41; transform: scale(1.05); }
+
+ 
+
+    /* PORTRAIT-ONLY OVERLAY (telefonon) */
+
+    #rotateOverlay {
+
+      position: fixed;
+
+      inset: 0;
+
+      display: none;
+
+      align-items: center;
+
+      justify-content: center;
+
+      text-align: center;
+
+      padding: 24px;
+
+      background: rgba(0,0,0,0.85);
+
+      z-index: 2000;
+
+      color: #fff;
+
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+
     }
+
+    #rotateOverlay .box {
+
+      max-width: 520px;
+
+      background: rgba(255,255,255,0.08);
+
+      border: 1px solid rgba(255,255,255,0.15);
+
+      border-radius: 16px;
+
+      padding: 18px 16px;
+
+      backdrop-filter: blur(6px);
+
+    }
+
+    #rotateOverlay .title {
+
+      font-size: 1.4em;
+
+      font-weight: 800;
+
+      color: #ffcc00;
+
+      margin-bottom: 10px;
+
+      text-shadow: 1px 1px 3px rgba(0,0,0,0.7);
+
+    }
+
+    #rotateOverlay .text {
+
+      font-size: 1.05em;
+
+      line-height: 1.45;
+
+      opacity: 0.95;
+
+    }
+
+ 
 
     /* GAME STYLES */
+
     #gameContainer {
+
       display: none;
+
       position: relative;
-      margin-bottom: 20px;
-      width: 800px;
+
+      margin-bottom: 16px;
+
+      width: 500px;          /* alap portrait */
+
       max-width: 95vw;
+
     }
+
+ 
 
     body {
+
       margin: 0;
+
       padding: 0;
+
       display: flex;
+
       flex-direction: column;
+
       align-items: center;
+
       justify-content: center;
+
       min-height: 100vh;
+
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+
       background-image: url('háttér1.jpg');
+
       background-size: cover;
+
       background-position: center;
+
       background-attachment: fixed;
+
       color: white;
+
       overflow-x: hidden;
+
     }
+
+ 
 
     #gameCanvas {
+
       background-color: white;
+
       border-radius: 8px;
+
       box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-      /* FONTOS: reszponzív megjelenítés */
+
       width: 100%;
+
       height: auto;
+
       display: block;
 
-      /* Mobilon ne görgessen/zoomoljon húzás közben */
       touch-action: none;
+
       -webkit-user-select: none;
+
       user-select: none;
+
     }
+
+ 
 
     #infoPanel {
+
       display: none;
+
       justify-content: space-between;
-      width: 800px;
+
+      width: 500px;         /* portraithez igazítva */
+
       max-width: 95vw;
-      margin-bottom: 20px;
+
+      margin-bottom: 12px;
+
       background-color: rgba(0, 0, 0, 0.5);
-      padding: 15px;
+
+      padding: 12px;
+
       border-radius: 8px;
+
       box-sizing: border-box;
+
       backdrop-filter: blur(5px);
+
       gap: 10px;
+
     }
+
+ 
 
     .infoSection {
+
       text-align: center;
+
       flex: 1;
-      padding: 0 10px;
+
+      padding: 0 8px;
+
       min-width: 0;
+
     }
+
+ 
 
     #controls {
+
       display: none;
-      margin-top: 15px;
+
+      margin-top: 12px;
+
       background-color: rgba(0, 0, 0, 0.5);
-      padding: 15px;
+
+      padding: 12px;
+
       border-radius: 8px;
-      width: 800px;
+
+      width: 500px;
+
       max-width: 95vw;
+
       box-sizing: border-box;
+
       backdrop-filter: blur(5px);
+
       text-align: center;
+
     }
+
+ 
 
     h1 {
+
       margin-bottom: 10px;
+
       color: #ffcc00;
+
       text-align: center;
+
       padding: 0 20px;
+
       text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+
     }
+
+ 
 
     h2 {
+
       margin-top: 0;
-      margin-bottom: 15px;
-      font-size: 1.2em;
+
+      margin-bottom: 10px;
+
+      font-size: 1.15em;
+
       color: #ffcc00;
+
       text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.7);
+
     }
+
+ 
 
     .pointValue {
-      font-size: 1.5em;
+
+      font-size: 1.25em;
+
       font-weight: bold;
-      margin: 5px 0;
+
+      margin: 4px 0;
+
       text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.7);
+
     }
+
+ 
 
     .instructions {
+
       font-size: 0.9em;
-      line-height: 1.4;
-      margin-top: 10px;
+
+      line-height: 1.35;
+
+      margin-top: 8px;
+
       text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.7);
+
     }
+
+ 
 
     button {
+
       background-color: #4CAF50;
+
       color: white;
+
       border: none;
-      padding: 10px 20px;
+
+      padding: 10px 18px;
+
       text-align: center;
+
       text-decoration: none;
+
       display: inline-block;
+
       font-size: 16px;
+
       margin: 4px 2px;
+
       cursor: pointer;
+
       border-radius: 4px;
+
       transition: background-color 0.3s;
+
       box-shadow: 0 3px 8px rgba(0, 0, 0, 0.3);
+
     }
 
-    button:hover {
-      background-color: #3e8e41;
-      transform: translateY(-2px);
-    }
+    button:hover { background-color: #3e8e41; transform: translateY(-2px); }
 
-    #resetBtn {
-      background-color: #f44336;
-    }
+ 
 
-    #resetBtn:hover {
-      background-color: #d32f2f;
-    }
+    #resetBtn { background-color: #f44336; }
+
+    #resetBtn:hover { background-color: #d32f2f; }
+
+ 
 
     .score {
+
       font-size: 2em;
+
       color: #ffcc00;
+
       font-weight: bold;
+
       text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+
     }
+
+ 
 
     #attemptsCounter {
-      font-size: 1.5em;
+
+      font-size: 1.15em;
+
       color: white;
+
       background-color: rgba(0, 0, 0, 0.6);
-      padding: 10px 20px;
+
+      padding: 8px 14px;
+
       border-radius: 5px;
-      margin-top: 10px;
+
+      margin-top: 8px;
+
       font-weight: bold;
+
       text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.7);
+
     }
 
+ 
+
     #timerDisplay {
-      font-size: 1.8em;
+
+      font-size: 1.15em;
+
       color: #4CAF50;
+
       font-weight: bold;
+
       background-color: rgba(0, 0, 0, 0.6);
-      padding: 8px 16px;
+
+      padding: 8px 14px;
+
       border-radius: 5px;
-      margin-top: 5px;
+
+      margin-top: 6px;
+
       text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.7);
+
     }
+
+ 
 
     #stoneImage { display: none; }
 
+ 
+
     @media (max-width: 850px) {
-      #infoPanel {
-        flex-direction: column;
-      }
 
-      #startPage h1, #endPage h2 {
-        font-size: 2.5em;
-      }
+      #infoPanel { flex-direction: column; }
 
-      #startButton, #restartButton {
-        padding: 15px 30px;
-        font-size: 1.5em;
-      }
+      #startPage h1, #endPage h2 { font-size: 2.5em; }
+
+      #startButton, #restartButton { padding: 15px 30px; font-size: 1.5em; }
 
       #finalScore { font-size: 4em; }
+
       #finalTime { font-size: 1.5em; }
+
     }
+
+ 
 
     .content-container {
+
       max-width: 100%;
-      padding: 20px;
+
+      padding: 14px;
+
       box-sizing: border-box;
+
       display: flex;
+
       flex-direction: column;
+
       align-items: center;
+
     }
+
   </style>
+
 </head>
 
+ 
+
 <body>
-  <!-- START PAGE -->
-  <div id="startPage">
-    <h1>Curling Játék</h1>
-    <button id="startButton">Játék Indítása</button>
+
+  <!-- PORTRAIT ONLY OVERLAY -->
+
+  <div id="rotateOverlay">
+
+    <div class="box">
+
+      <div class="title">Álló nézet szükséges</div>
+
+      <div class="text">
+
+        Ezt a játékot telefonon csak <b>álló (portrait)</b> nézetben lehet használni.<br>
+
+        Kérlek fordítsd vissza a telefont.
+
+      </div>
+
+    </div>
+
   </div>
+
+ 
+
+  <!-- START PAGE -->
+
+  <div id="startPage">
+
+    <h1>Curling Játék</h1>
+
+    <button id="startButton">Játék Indítása</button>
+
+  </div>
+
+ 
 
   <!-- END PAGE -->
+
   <div id="endPage">
+
     <h2>Játék vége!</h2>
+
     <div>Elért pontszámod:</div>
+
     <div id="finalScore">0</div>
+
     <div id="finalTime">Idő: 0:00</div>
+
     <button id="restartButton">Új játék</button>
+
   </div>
+
+ 
 
   <!-- GAME CONTENT -->
+
   <div id="gameContent" style="display: none;">
+
     <div class="content-container">
+
       <h1>Curling mini-game</h1>
 
+ 
+
       <div id="infoPanel">
+
         <div class="infoSection">
+
           <h2>Pontszám</h2>
+
           <div class="score" id="score">0</div>
+
         </div>
 
+ 
+
         <div class="infoSection">
+
           <h2>Körök értéke</h2>
+
           <div class="pointValue" style="color: white">Középső fehér: 10 pont</div>
+
           <div class="pointValue" style="color: rgb(226, 0, 116)">Magenta: 5 pont</div>
+
           <div class="pointValue" style="color: white">Nagy fehér: 3 pont</div>
+
           <div class="pointValue" style="color: blue">Nagy kék: 1 pont</div>
+
         </div>
 
+ 
+
         <div class="infoSection">
+
           <h2>Játék információk</h2>
+
           <div id="timerDisplay">Idő: 0:00</div>
+
           <div id="attemptsCounter">
+
             <span id="currentAttempt">1</span> / <span id="maxAttempts">8</span> csúsztatás
+
           </div>
+
           <div class="instructions">Összesen 8 csúsztatásod van!</div>
+
           <div class="instructions" id="gameState">Fogd és csúsztasd a követ!</div>
+
         </div>
+
       </div>
+
+ 
 
       <div id="gameContainer">
-        <canvas id="gameCanvas" width="800" height="500"></canvas>
+
+        <!-- PORTRAIT CANVAS (alap arány 500x800) -->
+
+        <canvas id="gameCanvas" width="500" height="800"></canvas>
+
       </div>
 
+ 
+
       <div id="controls">
+
         <button id="resetBtn">Új játék</button>
+
         <button id="helpBtn">Játékleírás</button>
+
         <button id="endGameBtn">Játék befejezése</button>
+
       </div>
+
     </div>
+
   </div>
+
+ 
 
   <img id="stoneImage" src="kő.png" alt="Curling kő" onload="stoneImageLoaded()" onerror="stoneImageError()">
 
+ 
+
   <script>
+
     // PAGE MANAGEMENT
+
     const startPage = document.getElementById('startPage');
+
     const endPage = document.getElementById('endPage');
+
     const gameContent = document.getElementById('gameContent');
+
     const startButton = document.getElementById('startButton');
+
     const restartButton = document.getElementById('restartButton');
+
     const finalScoreElement = document.getElementById('finalScore');
+
     const finalTimeElement = document.getElementById('finalTime');
+
     const endGameBtn = document.getElementById('endGameBtn');
 
+ 
+
+    const rotateOverlay = document.getElementById('rotateOverlay');
+
+ 
+
+    // Mobil detekt (egyszerű, de stabil játékhoz elég)
+
+    function isPhoneLike() {
+
+      return window.matchMedia && window.matchMedia("(pointer: coarse)").matches;
+
+    }
+
+ 
+
+    function updateOrientationLockUI() {
+
+      // Telefonon csak portrait
+
+      if (!isPhoneLike()) {
+
+        rotateOverlay.style.display = 'none';
+
+        return;
+
+      }
+
+      const portrait = window.innerHeight >= window.innerWidth;
+
+      rotateOverlay.style.display = portrait ? 'none' : 'flex';
+
+    }
+
+ 
+
+    window.addEventListener('resize', updateOrientationLockUI);
+
+    window.addEventListener('orientationchange', updateOrientationLockUI);
+
+ 
+
     // Game variables
+
     let score = 0;
+
     let gameActive = false;
+
     let attempts = 0;
+
     const MAX_ATTEMPTS = 8;
 
+ 
+
     // Timer variables
+
     let gameStartTime = 0;
+
     let gameTimerInterval = null;
+
     let elapsedSeconds = 0;
+
     const timerDisplay = document.getElementById('timerDisplay');
 
+ 
+
     // Stone image variables
+
     let stoneImg = null;
+
     let stoneImageLoadedSuccessfully = false;
 
+ 
+
     // GAME LOGIC
+
     const canvas = document.getElementById('gameCanvas');
+
     const ctx = canvas.getContext('2d');
+
     const scoreElement = document.getElementById('score');
+
     const gameStateElement = document.getElementById('gameState');
+
     const resetBtn = document.getElementById('resetBtn');
+
     const helpBtn = document.getElementById('helpBtn');
+
     const currentAttemptElement = document.getElementById('currentAttempt');
+
     const maxAttemptsElement = document.getElementById('maxAttempts');
 
-    // --- ÚJ: canvas méretezéshez skála (hogy a touch/mouse koordináta pontos legyen) ---
+ 
+
+    // Pontos koordináta számítás (reszponzív canvas)
+
     function getCanvasPoint(clientX, clientY) {
+
       const rect = canvas.getBoundingClientRect();
+
       const scaleX = canvas.width / rect.width;
+
       const scaleY = canvas.height / rect.height;
+
       return {
+
         x: (clientX - rect.left) * scaleX,
+
         y: (clientY - rect.top) * scaleY
+
       };
+
     }
+
+ 
+
+    // Portrait pálya: indító alul, célkör felül
 
     let stone = {
-      x: 150,
-      y: 250,
+
+      x: 250,
+
+      y: 650,
+
       radius: 20,
-      color: '#A52A2A',
+
       dx: 0,
+
       dy: 0,
+
       isMoving: false,
+
       isDragging: false,
+
       dragStartX: 0,
+
       dragStartY: 0,
+
       dragEndX: 0,
+
       dragEndY: 0,
+
       friction: 0.985,
+
       handleColor: '#FFD700',
+
       rotation: 0,
+
       rotationSpeed: 0
+
     };
 
-    const circleRadius = 165;
-    const circles = [
+ 
+
+    // Dinamikus körméret, hogy szépen arányos maradjon
+
+    function getCircleRadius() {
+
+      return Math.min(canvas.width, canvas.height) * 0.33; // kb 165 ha width=500
+
+    }
+
+ 
+
+    let circleRadius = getCircleRadius();
+
+    let circles = [
+
       { radius: circleRadius, color: 'darkblue', points: 1 },
+
       { radius: circleRadius * 0.71, color: 'white', points: 3 },
+
       { radius: circleRadius * 0.42, color: 'rgb(226, 0, 116)', points: 5 },
+
       { radius: circleRadius * 0.17, color: 'white', points: 10 }
+
     ];
 
-    let circleCenterX = canvas.width - 200;
-    let circleCenterY = canvas.height / 2;
+ 
+
+    // Célkör közép: felül
+
+    let circleCenterX = canvas.width / 2;
+
+    let circleCenterY = 200;
+
+ 
+
+    // Indító rész: alul 1/3
 
     let launchArea = {
+
       x: 0,
-      y: 0,
-      width: canvas.width / 3,
-      height: canvas.height
+
+      y: canvas.height * (2/3),
+
+      width: canvas.width,
+
+      height: canvas.height / 3
+
     };
 
+ 
+
     // Start game function
+
     function startGame() {
+
+      updateOrientationLockUI();
+
+ 
+
       startPage.style.display = 'none';
+
       gameContent.style.display = 'block';
+
       document.getElementById('infoPanel').style.display = 'flex';
+
       document.getElementById('controls').style.display = 'block';
+
       document.getElementById('gameContainer').style.display = 'block';
 
+ 
+
       gameActive = true;
+
       attempts = 0;
+
       elapsedSeconds = 0;
 
-      adjustCanvasSize();      // fontos: előbb méretezünk
-      updateGameDimensions();  // aztán újraszámoljuk a pálya dimenziókat
+ 
 
-      initGame();
-      updateAttemptsDisplay();
-      startTimer();
-    }
-
-    // End game function
-    function endGame() {
-      gameContent.style.display = 'none';
-      endPage.style.display = 'flex';
-      finalScoreElement.textContent = score;
-
-      const minutes = Math.floor(elapsedSeconds / 60);
-      const seconds = elapsedSeconds % 60;
-      const formattedTime = `${minutes}:${seconds.toString().padStart(2, '0')}`;
-      finalTimeElement.textContent = `Idő: ${formattedTime}`;
-
-      gameActive = false;
-      stopTimer();
-    }
-
-    // Timer functions
-    function startTimer() {
-      gameStartTime = Date.now();
-      stopTimer();
-
-      gameTimerInterval = setInterval(function() {
-        if (gameActive) {
-          elapsedSeconds = Math.floor((Date.now() - gameStartTime) / 1000);
-          updateTimerDisplay();
-        }
-      }, 1000);
-    }
-
-    function stopTimer() {
-      if (gameTimerInterval) {
-        clearInterval(gameTimerInterval);
-        gameTimerInterval = null;
-      }
-    }
-
-    function updateTimerDisplay() {
-      const minutes = Math.floor(elapsedSeconds / 60);
-      const seconds = elapsedSeconds % 60;
-      const formattedTime = `${minutes}:${seconds.toString().padStart(2, '0')}`;
-      timerDisplay.textContent = `Idő: ${formattedTime}`;
-    }
-
-    // Event listeners for page management
-    startButton.addEventListener('click', startGame);
-    restartButton.addEventListener('click', function() {
-      endPage.style.display = 'none';
-      startGame();
-    });
-    endGameBtn.addEventListener('click', endGame);
-
-    // Adjust canvas size for smaller screens (javítva: nem CSS-szel “trükközünk”, hanem tényleges canvas méretet állítunk)
-    function adjustCanvasSize() {
-      const container = document.getElementById('gameContainer');
-      const containerWidth = container.clientWidth;
-
-      const baseW = 800;
-      const baseH = 500;
-
-      // Tényleges rajzolási felbontás:
-      if (containerWidth < baseW) {
-        canvas.width = Math.floor(containerWidth);
-        canvas.height = Math.floor((containerWidth * baseH) / baseW);
-      } else {
-        canvas.width = baseW;
-        canvas.height = baseH;
-      }
-    }
-
-    // Stone image load handlers
-    function stoneImageLoaded() {
-      stoneImg = document.getElementById('stoneImage');
-      stoneImageLoadedSuccessfully = true;
-      console.log("Kő kép (PNG) sikeresen betöltve");
-    }
-
-    function stoneImageError() {
-      console.log("Nem sikerült betölteni a kő.png fájlt. Használom az alapértelmezett grafikát.");
-      stoneImageLoadedSuccessfully = false;
-    }
-
-    // Update game dimensions when canvas size changes
-    function updateGameDimensions() {
-      circleCenterX = canvas.width - 200;
-      circleCenterY = canvas.height / 2;
-      launchArea.width = canvas.width / 3;
-      launchArea.height = canvas.height;
-
-      if (gameActive && !stone.isMoving) {
-        stone.x = launchArea.width / 2;
-        stone.y = canvas.height / 2;
-      }
-    }
-
-    // csúsztatás számláló frissítése
-    function updateAttemptsDisplay() {
-      currentAttemptElement.textContent = attempts;
-      maxAttemptsElement.textContent = MAX_ATTEMPTS;
-      updateGameState();
-    }
-
-    // Ellenőrizzük, hogy vége van-e a játéknak
-    function checkGameEnd() {
-      if (attempts >= MAX_ATTEMPTS) {
-        setTimeout(() => {
-          if (gameActive) endGame();
-        }, 3000);
-        return true;
-      }
-      return false;
-    }
-
-    // Játék inicializálása
-    function initGame() {
-      score = 0;
-      attempts = 0;
-      updateScore();
-      updateAttemptsDisplay();
-      updateTimerDisplay();
+      adjustCanvasSize();
 
       updateGameDimensions();
 
-      stone.x = launchArea.width / 2;
-      stone.y = canvas.height / 2;
+ 
+
+      initGame();
+
+      updateAttemptsDisplay();
+
+      startTimer();
+
+    }
+
+ 
+
+    // End game function
+
+    function endGame() {
+
+      gameContent.style.display = 'none';
+
+      endPage.style.display = 'flex';
+
+      finalScoreElement.textContent = score;
+
+ 
+
+      const minutes = Math.floor(elapsedSeconds / 60);
+
+      const seconds = elapsedSeconds % 60;
+
+      const formattedTime = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+
+      finalTimeElement.textContent = `Idő: ${formattedTime}`;
+
+ 
+
+      gameActive = false;
+
+      stopTimer();
+
+    }
+
+ 
+
+    // Timer functions
+
+    function startTimer() {
+
+      gameStartTime = Date.now();
+
+      stopTimer();
+
+ 
+
+      gameTimerInterval = setInterval(function() {
+
+        if (gameActive) {
+
+          elapsedSeconds = Math.floor((Date.now() - gameStartTime) / 1000);
+
+          updateTimerDisplay();
+
+        }
+
+      }, 1000);
+
+    }
+
+ 
+
+    function stopTimer() {
+
+      if (gameTimerInterval) {
+
+        clearInterval(gameTimerInterval);
+
+        gameTimerInterval = null;
+
+      }
+
+    }
+
+ 
+
+    function updateTimerDisplay() {
+
+      const minutes = Math.floor(elapsedSeconds / 60);
+
+      const seconds = elapsedSeconds % 60;
+
+      const formattedTime = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+
+      timerDisplay.textContent = `Idő: ${formattedTime}`;
+
+    }
+
+ 
+
+    // Event listeners for page management
+
+    startButton.addEventListener('click', startGame);
+
+    restartButton.addEventListener('click', function() {
+
+      endPage.style.display = 'none';
+
+      startGame();
+
+    });
+
+    endGameBtn.addEventListener('click', endGame);
+
+ 
+
+    // Canvas reszponzív (portrait arány 500x800)
+
+    function adjustCanvasSize() {
+
+      const container = document.getElementById('gameContainer');
+
+      const containerWidth = container.clientWidth;
+
+ 
+
+      const baseW = 500;
+
+      const baseH = 800;
+
+ 
+
+      // kb mennyi hely marad a canvasnak a kijelzőn
+
+      const reserveForUI = 280; // info + gombok + cím
+
+      const availableHeight = Math.max(320, window.innerHeight - reserveForUI);
+
+ 
+
+      const scale = Math.min(containerWidth / baseW, availableHeight / baseH, 1);
+
+ 
+
+      canvas.width = Math.floor(baseW * scale);
+
+      canvas.height = Math.floor(baseH * scale);
+
+    }
+
+ 
+
+    // Stone image load handlers
+
+    function stoneImageLoaded() {
+
+      stoneImg = document.getElementById('stoneImage');
+
+      stoneImageLoadedSuccessfully = true;
+
+      console.log("Kő kép (PNG) sikeresen betöltve");
+
+    }
+
+    function stoneImageError() {
+
+      console.log("Nem sikerült betölteni a kő.png fájlt. Használom az alapértelmezett grafikát.");
+
+      stoneImageLoadedSuccessfully = false;
+
+    }
+
+ 
+
+    // Update game dimensions when canvas size changes
+
+    function updateGameDimensions() {
+
+      circleRadius = getCircleRadius();
+
+      circles = [
+
+        { radius: circleRadius, color: 'darkblue', points: 1 },
+
+        { radius: circleRadius * 0.71, color: 'white', points: 3 },
+
+        { radius: circleRadius * 0.42, color: 'rgb(226, 0, 116)', points: 5 },
+
+        { radius: circleRadius * 0.17, color: 'white', points: 10 }
+
+      ];
+
+ 
+
+      circleCenterX = canvas.width / 2;
+
+      circleCenterY = 200 * (canvas.height / 800); // arányosan felül
+
+ 
+
+      launchArea.x = 0;
+
+      launchArea.width = canvas.width;
+
+      launchArea.height = canvas.height / 3;
+
+      launchArea.y = canvas.height - launchArea.height;
+
+ 
+
+      if (gameActive && !stone.isMoving) {
+
+        stone.x = canvas.width / 2;
+
+        stone.y = launchArea.y + launchArea.height / 2;
+
+      }
+
+    }
+
+ 
+
+    // csúsztatás számláló frissítése
+
+    function updateAttemptsDisplay() {
+
+      currentAttemptElement.textContent = attempts;
+
+      maxAttemptsElement.textContent = MAX_ATTEMPTS;
+
+      updateGameState();
+
+    }
+
+ 
+
+    // Ellenőrizzük, hogy vége van-e a játéknak
+
+    function checkGameEnd() {
+
+      if (attempts >= MAX_ATTEMPTS) {
+
+        setTimeout(() => {
+
+          if (gameActive) endGame();
+
+        }, 3000);
+
+        return true;
+
+      }
+
+      return false;
+
+    }
+
+ 
+
+    // Játék inicializálása
+
+    function initGame() {
+
+      score = 0;
+
+      attempts = 0;
+
+      updateScore();
+
+      updateAttemptsDisplay();
+
+      updateTimerDisplay();
+
+ 
+
+      updateGameDimensions();
+
+ 
+
+      stone.x = canvas.width / 2;
+
+      stone.y = launchArea.y + launchArea.height / 2;
+
       stone.dx = 0;
+
       stone.dy = 0;
+
       stone.rotation = 0;
+
       stone.rotationSpeed = 0;
+
       stone.isMoving = false;
+
       stone.isDragging = false;
 
-      gameStateElement.textContent = "Fogd meg a követ és csúsztasd a pályán! (1/8 csúsztatás)";
+ 
+
+      gameStateElement.textContent = "Fogd meg a követ alul és csúsztasd FÖLFELÉ! (1/8 csúsztatás)";
+
     }
+
+ 
 
     // Pontszám frissítése
+
     function updateScore() {
+
       scoreElement.textContent = score;
+
     }
 
+ 
+
     // Játékállapot frissítése
+
     function updateGameState() {
+
       if (!gameActive) return;
+
+ 
 
       const remainingAttempts = MAX_ATTEMPTS - attempts;
 
+ 
+
       if (stone.isDragging) {
-        gameStateElement.textContent = `Húzd a követ a célkör irányába! (${attempts+1}/8 csúsztatás)`;
+
+        gameStateElement.textContent = `Húzd a követ FÖLFELÉ a célkör felé! (${attempts+1}/8 csúsztatás)`;
+
       } else if (stone.isMoving) {
-        gameStateElement.textContent = `A kő csúszik a célkör felé... (${attempts+1}/8 csúsztatás)`;
-      } else if (stone.x < launchArea.width) {
+
+        gameStateElement.textContent = `A kő csúszik felfelé... (${attempts+1}/8 csúsztatás)`;
+
+      } else if (stone.y > launchArea.y) {
+
         if (remainingAttempts > 0) {
+
           gameStateElement.textContent = `Fogd és csúsztasd a követ! (${attempts+1}/8 csúsztatás)`;
+
         } else {
+
           gameStateElement.textContent = "Játék vége! Várj a pontszám kijelzésére...";
+
         }
+
       } else {
+
         gameStateElement.textContent = `Várj, amíg a kő megáll! (${remainingAttempts} csúsztatás maradt)`;
+
       }
+
     }
+
+ 
 
     // Rajzoló függvények
+
     function drawLaunchArea() {
-      const iceGradient = ctx.createLinearGradient(0, 0, canvas.width, 0);
-      iceGradient.addColorStop(0, '#E6F7FF');
-      iceGradient.addColorStop(1, '#C2E7FF');
+
+      // jég háttér (függőleges irányú finom átmenet)
+
+      const iceGradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
+
+      iceGradient.addColorStop(0, '#C2E7FF');
+
+      iceGradient.addColorStop(1, '#E6F7FF');
 
       ctx.fillStyle = iceGradient;
+
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
+ 
+
+      // Indító rész alul
+
       ctx.fillStyle = 'rgba(100, 150, 200, 0.1)';
+
       ctx.fillRect(launchArea.x, launchArea.y, launchArea.width, launchArea.height);
 
+ 
+
       ctx.strokeStyle = 'rgba(0, 100, 200, 0.5)';
+
       ctx.lineWidth = 2;
+
       ctx.strokeRect(launchArea.x, launchArea.y, launchArea.width, launchArea.height);
 
-      ctx.fillStyle = 'rgba(0, 100, 200, 0.7)';
+ 
+
+      ctx.fillStyle = 'rgba(0, 100, 200, 0.75)';
+
       ctx.font = 'bold 18px Arial';
+
       ctx.textAlign = 'center';
-      ctx.fillText("INDÍTÓ RÉSZ", launchArea.width / 2, canvas.height - 30);
+
+      ctx.fillText("INDÍTÓ RÉSZ", canvas.width / 2, canvas.height - 20);
+
     }
+
+ 
 
     function drawCircles() {
+
       circles.forEach(circle => {
+
         ctx.beginPath();
+
         ctx.arc(circleCenterX, circleCenterY, circle.radius, 0, Math.PI * 2);
+
         ctx.fillStyle = circle.color;
+
         ctx.fill();
 
+ 
+
         ctx.strokeStyle = 'rgba(0, 0, 0, 0.3)';
+
         ctx.lineWidth = 1;
+
         ctx.stroke();
+
       });
+
     }
 
-    function drawStone() {
-      if (stoneImageLoadedSuccessfully && stoneImg) {
-        ctx.save();
-        ctx.translate(stone.x, stone.y);
-        ctx.rotate(stone.rotation);
-        const imgWidth = stone.radius * 2;
-        const imgHeight = stone.radius * 2;
-        ctx.drawImage(stoneImg, -stone.radius, -stone.radius, imgWidth, imgHeight);
-        ctx.restore();
-      } else {
-        ctx.beginPath();
-        ctx.arc(stone.x, stone.y, stone.radius, 0, Math.PI * 2);
-
-        const stoneGradient = ctx.createRadialGradient(
-          stone.x - stone.radius/3, stone.y - stone.radius/3, 1,
-          stone.x, stone.y, stone.radius
-        );
-        stoneGradient.addColorStop(0, '#D2691E');
-        stoneGradient.addColorStop(1, '#8B4513');
-
-        ctx.fillStyle = stoneGradient;
-        ctx.fill();
-
-        ctx.strokeStyle = 'rgba(0, 0, 0, 0.5)';
-        ctx.lineWidth = 2;
-        ctx.stroke();
-
-        ctx.beginPath();
-        ctx.arc(stone.x, stone.y, stone.radius/2.5, 0, Math.PI * 2);
-        ctx.fillStyle = stone.handleColor;
-        ctx.fill();
-
-        ctx.strokeStyle = 'rgba(0, 0, 0, 0.3)';
-        ctx.lineWidth = 1;
-        ctx.stroke();
-      }
-
-      if (stone.isDragging) {
-        ctx.beginPath();
-        ctx.moveTo(stone.x, stone.y);
-        ctx.lineTo(stone.dragEndX, stone.dragEndY);
-        ctx.strokeStyle = 'rgba(255, 0, 0, 0.7)';
-        ctx.lineWidth = 3;
-        ctx.stroke();
-
-        drawStoneTrajectory();
-      }
-    }
+ 
 
     function drawStoneTrajectory() {
+
       const steps = 30;
+
       let predX = stone.x;
+
       let predY = stone.y;
+
       let predDx = (stone.dragStartX - stone.dragEndX) * 0.15;
+
       let predDy = (stone.dragStartY - stone.dragEndY) * 0.15;
+
       const predFriction = stone.friction;
 
+ 
+
       ctx.strokeStyle = 'rgba(0, 150, 255, 0.3)';
+
       ctx.lineWidth = 1;
+
       ctx.beginPath();
+
       ctx.moveTo(predX, predY);
 
+ 
+
       for (let i = 0; i < steps; i++) {
+
         predX += predDx;
+
         predY += predDy;
 
+ 
+
         if (predX - stone.radius < 0 || predX + stone.radius > canvas.width) predDx = -predDx * 0.8;
+
         if (predY - stone.radius < 0 || predY + stone.radius > canvas.height) predDy = -predDy * 0.8;
 
+ 
+
         predDx *= predFriction;
+
         predDy *= predFriction;
+
+ 
 
         ctx.lineTo(predX, predY);
 
+ 
+
         if (Math.abs(predDx) < 0.1 && Math.abs(predDy) < 0.1) break;
+
       }
+
       ctx.stroke();
+
     }
+
+ 
+
+    function drawStone() {
+
+      if (stoneImageLoadedSuccessfully && stoneImg) {
+
+        ctx.save();
+
+        ctx.translate(stone.x, stone.y);
+
+        ctx.rotate(stone.rotation);
+
+        ctx.drawImage(stoneImg, -stone.radius, -stone.radius, stone.radius * 2, stone.radius * 2);
+
+        ctx.restore();
+
+      } else {
+
+        ctx.beginPath();
+
+        ctx.arc(stone.x, stone.y, stone.radius, 0, Math.PI * 2);
+
+ 
+
+        const stoneGradient = ctx.createRadialGradient(
+
+          stone.x - stone.radius/3, stone.y - stone.radius/3, 1,
+
+          stone.x, stone.y, stone.radius
+
+        );
+
+        stoneGradient.addColorStop(0, '#D2691E');
+
+        stoneGradient.addColorStop(1, '#8B4513');
+
+ 
+
+        ctx.fillStyle = stoneGradient;
+
+        ctx.fill();
+
+ 
+
+        ctx.strokeStyle = 'rgba(0, 0, 0, 0.5)';
+
+        ctx.lineWidth = 2;
+
+        ctx.stroke();
+
+ 
+
+        ctx.beginPath();
+
+        ctx.arc(stone.x, stone.y, stone.radius/2.5, 0, Math.PI * 2);
+
+        ctx.fillStyle = stone.handleColor;
+
+        ctx.fill();
+
+ 
+
+        ctx.strokeStyle = 'rgba(0, 0, 0, 0.3)';
+
+        ctx.lineWidth = 1;
+
+        ctx.stroke();
+
+      }
+
+ 
+
+      if (stone.isDragging) {
+
+        ctx.beginPath();
+
+        ctx.moveTo(stone.x, stone.y);
+
+        ctx.lineTo(stone.dragEndX, stone.dragEndY);
+
+        ctx.strokeStyle = 'rgba(255, 0, 0, 0.7)';
+
+        ctx.lineWidth = 3;
+
+        ctx.stroke();
+
+ 
+
+        drawStoneTrajectory();
+
+      }
+
+    }
+
+ 
 
     function checkStoneInCircle() {
+
       const distance = Math.sqrt(
+
         Math.pow(stone.x - circleCenterX, 2) +
+
         Math.pow(stone.y - circleCenterY, 2)
+
       );
 
+ 
+
       for (let i = circles.length - 1; i >= 0; i--) {
+
         if (distance <= circles[i].radius) return circles[i];
+
       }
+
       return null;
+
     }
+
+ 
 
     function draw() {
+
       ctx.clearRect(0, 0, canvas.width, canvas.height);
+
       drawLaunchArea();
+
       drawCircles();
+
       drawStone();
+
     }
 
+ 
+
     function updateStone() {
+
       if (!stone.isMoving || !gameActive) return;
 
+ 
+
       stone.x += stone.dx;
+
       stone.y += stone.dy;
 
+ 
+
       if (Math.abs(stone.dx) > 0.1 || Math.abs(stone.dy) > 0.1) {
+
         stone.rotationSpeed = (stone.dx + stone.dy) * 0.03;
+
         stone.rotation += stone.rotationSpeed;
+
       }
+
+ 
 
       if (stone.x - stone.radius < 0 || stone.x + stone.radius > canvas.width) {
+
         stone.dx = -stone.dx * 0.8;
+
         stone.rotationSpeed = -stone.rotationSpeed * 0.5;
+
         if (stone.x - stone.radius < 0) stone.x = stone.radius;
+
         if (stone.x + stone.radius > canvas.width) stone.x = canvas.width - stone.radius;
+
       }
+
+ 
 
       if (stone.y - stone.radius < 0 || stone.y + stone.radius > canvas.height) {
+
         stone.dy = -stone.dy * 0.8;
+
         stone.rotationSpeed = -stone.rotationSpeed * 0.5;
+
         if (stone.y - stone.radius < 0) stone.y = stone.radius;
+
         if (stone.y + stone.radius > canvas.height) stone.y = canvas.height - stone.radius;
+
       }
 
+ 
+
       stone.dx *= stone.friction;
+
       stone.dy *= stone.friction;
+
       stone.rotationSpeed *= 0.99;
 
+ 
+
       if (Math.abs(stone.dx) < 0.05 && Math.abs(stone.dy) < 0.05) {
+
         stone.dx = 0;
+
         stone.dy = 0;
+
         stone.isMoving = false;
+
         stone.rotationSpeed = 0;
 
+ 
+
         const circle = checkStoneInCircle();
+
         if (circle && circle.points > 0) {
+
           score += circle.points;
+
           updateScore();
+
           gameStateElement.textContent = `+${circle.points} pont! A kő a célkörben landolt!`;
-        } else if (stone.x > launchArea.width) {
+
+        } else if (stone.y < launchArea.y) {
+
           gameStateElement.textContent = "A kő a célkör mellett állt meg. Próbáld újra!";
+
         }
 
+ 
+
         attempts++;
+
         updateAttemptsDisplay();
+
+ 
 
         if (checkGameEnd()) return;
 
+ 
+
         setTimeout(() => {
+
           if (!stone.isMoving && gameActive) {
-            stone.x = launchArea.width / 2;
-            stone.y = canvas.height / 2;
+
+            stone.x = canvas.width / 2;
+
+            stone.y = launchArea.y + launchArea.height / 2;
+
             stone.rotation = 0;
+
             updateGameState();
+
           }
+
         }, 2000);
+
       }
+
+ 
 
       updateGameState();
+
     }
 
-    // --- ÚJ: Pointer Events (egér + érintés) ---
+ 
+
+    // Pointer Events (egér + érintés)
+
     function onPointerDown(e) {
+
       if (!gameActive) return;
 
-      // mobilon ne scrollozzon/zoomoljon húzásnál
+      updateOrientationLockUI();
+
+      if (isPhoneLike() && rotateOverlay.style.display === 'flex') return;
+
+ 
+
       e.preventDefault();
+
+ 
 
       if (attempts >= MAX_ATTEMPTS) {
+
         gameStateElement.textContent = "Nincs több próbálkozás! Játék vége.";
+
         return;
+
       }
+
+ 
 
       const p = getCanvasPoint(e.clientX, e.clientY);
 
-      const distance = Math.sqrt(
-        Math.pow(p.x - stone.x, 2) +
-        Math.pow(p.y - stone.y, 2)
-      );
+      const distance = Math.sqrt(Math.pow(p.x - stone.x, 2) + Math.pow(p.y - stone.y, 2));
 
-      if (distance < stone.radius && !stone.isMoving && stone.x < launchArea.width) {
+ 
+
+      // Csak az indító részben (alul) lehessen megfogni
+
+      if (distance < stone.radius && !stone.isMoving && stone.y > launchArea.y) {
+
         stone.isDragging = true;
+
         stone.dragStartX = p.x;
+
         stone.dragStartY = p.y;
+
         stone.dragEndX = p.x;
+
         stone.dragEndY = p.y;
 
-        // rögzítsük a pointert, hogy kicsúszásnál is megkapjuk a move/up eseményeket
-        if (canvas.setPointerCapture) {
-          canvas.setPointerCapture(e.pointerId);
-        }
+ 
+
+        if (canvas.setPointerCapture) canvas.setPointerCapture(e.pointerId);
 
         updateGameState();
+
       }
+
     }
+
+ 
 
     function onPointerMove(e) {
+
       if (!stone.isDragging || !gameActive) return;
+
       e.preventDefault();
+
       const p = getCanvasPoint(e.clientX, e.clientY);
+
       stone.dragEndX = p.x;
+
       stone.dragEndY = p.y;
+
     }
 
+ 
+
     function onPointerUp(e) {
+
       if (!stone.isDragging || !gameActive) return;
+
       e.preventDefault();
 
+ 
+
       const p = getCanvasPoint(e.clientX, e.clientY);
+
       stone.dragEndX = p.x;
+
       stone.dragEndY = p.y;
 
+ 
+
       const powerFactor = 0.12;
+
+ 
+
+      // Lentről felfelé: ha felfelé húzod (dragEndY < dragStartY) akkor dy negatív lesz => felfelé megy
+
       stone.dx = (stone.dragStartX - stone.dragEndX) * powerFactor;
+
       stone.dy = (stone.dragStartY - stone.dragEndY) * powerFactor;
 
+ 
+
       stone.isMoving = true;
+
       stone.isDragging = false;
 
       updateGameState();
+
     }
 
-    // Régi mouse eseményeket kivesszük, helyette pointer:
+ 
+
     canvas.addEventListener('pointerdown', onPointerDown, { passive: false });
+
     canvas.addEventListener('pointermove', onPointerMove, { passive: false });
+
     canvas.addEventListener('pointerup', onPointerUp, { passive: false });
+
     canvas.addEventListener('pointercancel', onPointerUp, { passive: false });
+
     canvas.addEventListener('pointerleave', onPointerUp, { passive: false });
 
+ 
+
     // Játék ciklus
+
     function gameLoop() {
+
       updateStone();
+
       draw();
+
       requestAnimationFrame(gameLoop);
+
     }
 
+ 
+
     resetBtn.addEventListener('click', function() {
+
       endGame();
+
       setTimeout(() => {
+
         endPage.style.display = 'none';
+
         startGame();
+
       }, 100);
+
     });
+
+ 
 
     helpBtn.addEventListener('click', function() {
-      alert("CURLING JÁTÉKLEÍRÁS:\n\n1. A követ csak az indító részben lehet megfogni.\n2. Fogd meg a követ a húzd és céloz a JOBB OLDALI KÖR FELÉ és engedd el.\n3. A húzás hossza határozza meg a kő sebességét.\n4. A követ a célkör közepébe kell csúsztatni pontokért.\n5. ÖSSZESEN 8 CSÚSZTATÁSOD VAN!\n\nPONTOZÁS (célkörök):\n- Középső fehér kör: 10 pont\n- Magenta kör: 5 pont\n- Nagy fehér kör: 3 pont\n- Nagy kék kör: 1 pont\n");
+
+      alert("CURLING JÁTÉKLEÍRÁS:\n\n1. A követ csak az indító részben (alul) lehet megfogni.\n2. Húzd a követ FÖLFELÉ a célkör felé és engedd el.\n3. A húzás hossza határozza meg a kő sebességét.\n4. A követ a célkör közepébe kell csúsztatni pontokért.\n5. ÖSSZESEN 8 CSÚSZTATÁSOD VAN!\n\nPONTOZÁS (célkörök):\n- Középső fehér kör: 10 pont\n- Magenta kör: 5 pont\n- Nagy fehér kör: 3 pont\n- Nagy kék kör: 1 pont\n");
+
     });
+
+ 
 
     window.addEventListener('resize', function() {
+
+      updateOrientationLockUI();
+
       if (gameActive) {
+
         adjustCanvasSize();
+
         updateGameDimensions();
+
       }
+
     });
 
-    // Játék ciklus indítása
+ 
+
+    // Indítás
+
+    updateOrientationLockUI();
+
     gameLoop();
+
   </script>
+
 </body>
+
 </html>
