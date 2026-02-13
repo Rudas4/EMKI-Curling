@@ -1754,15 +1754,19 @@
 
         const circle = checkStoneInCircle();
 
-        if (circle && circle.points > 0) {
+      if (circle && circle.points > 0) {
+  score += circle.points;
 
-          score += circle.points;
+  // ===== MAXIMUM 80 PONTOS KORLÁT =====
+  if (score > 80) {
+    score = 80;
+  }
+  // ====================================
 
-          updateScore();
-
-          gameStateElement.textContent = `+${circle.points} pont! A kő a célkörben landolt!`;
-
-        } else if (stone.y < launchArea.y) {
+  updateScore();
+  gameStateElement.textContent = `+${circle.points} pont! A kő a célkörben landolt!`;
+}
+ else if (stone.y < launchArea.y) {
 
           gameStateElement.textContent = "A kő a célkör mellett állt meg. Próbáld újra!";
 
@@ -1962,7 +1966,7 @@
 
     helpBtn.addEventListener('click', function() {
 
-      alert("CURLING JÁTÉKLEÍRÁS:\n\n1. A követ csak az indító részben (alul) lehet megfogni.\n2. Húzd a követ hátra és céloz a célkör felé és engedd el.\n3. A húzás hossza határozza meg a kő sebességét.\n4. A követ a célkör közepébe kell csúsztatni pontokért.\n5. Figyelj az időre az is számít! \n6. ÖSSZESEN 8 CSÚSZTATÁSOD VAN!\n\nPONTOZÁS (célkörök):\n- Középső fehér kör: 10 pont\n- Magenta kör: 5 pont\n- Nagy fehér kör: 3 pont\n- Nagy kék kör: 1 pont\n");
+      alert("CURLING JÁTÉKLEÍRÁS:\n\n1. A követ csak az indító részben (alul) lehet megfogni.\n2. Húzd a követ FÖLFELÉ a célkör felé és engedd el.\n3. A húzás hossza határozza meg a kő sebességét.\n4. A követ a célkör közepébe kell csúsztatni pontokért.\n5. ÖSSZESEN 8 CSÚSZTATÁSOD VAN!\n\nPONTOZÁS (célkörök):\n- Középső fehér kör: 10 pont\n- Magenta kör: 5 pont\n- Nagy fehér kör: 3 pont\n- Nagy kék kör: 1 pont\n");
 
     });
 
@@ -1995,5 +1999,3 @@
 </body>
 
 </html>
-
-
